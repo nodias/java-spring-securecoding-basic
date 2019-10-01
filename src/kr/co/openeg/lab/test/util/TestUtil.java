@@ -161,31 +161,74 @@ public class TestUtil {
 			return result.toString();
 	}
 	
+//	public String readDB2(String id) {
+//		StringBuffer  result=new StringBuffer();
+//		Connection con=null;
+//		Statement st=null;
+//		ResultSet rs=null;
+//		try {
+//			con = EConnection.getConnection(this);	
+//			st = con.createStatement();
+//			rs = st.executeQuery("select * from board_member where userid='"+id+"'");
+//   		    while ( rs.next() ) {
+//   		    	   result.append("IDX: "+rs.getString(1));
+//			       result.append("      ID: "+rs.getString(2));
+//			       result.append("      PASSWORD: "+rs.getString(3));
+//			       result.append("      이름: "+rs.getString(4)+"\n");
+//			}
+//		} catch (SQLException e1) {
+//			result.append("요청 처리 에러 발생");
+//		}
+//	
+//			if ( rs != null ) try { rs.close(); }catch(SQLException e){}
+//			if ( st != null ) try { st.close(); }catch(SQLException e){}
+//			if ( con != null ) try { con.close(); }catch(SQLException e){}
+//            
+//			return result.toString();
+//	}
+
+	//@@@@
 	public String readDB2(String id) {
-		StringBuffer  result=new StringBuffer();
-		Connection con=null;
-		Statement st=null;
-		ResultSet rs=null;
+		StringBuffer result = new StringBuffer();
+		Connection con = null;
+//		Statement st = null;
+//		ResultSet rs = null;
+//		try {
+//			con = EConnection.getConnection(this);
+//			st = con.createStatement();
+//			rs = st.executeQuery("select * from board_member where userid='" + id + "'");
+		
+		// Statement를 PreparedStatement로 변환 
+		// #1 PrepredStatement를 선언
+		java.sql.PreparedStatement st = null;
+		ResultSet rs = null;
 		try {
-			con = EConnection.getConnection(this);	
-			st = con.createStatement();
-			rs = st.executeQuery("select * from board_member where userid='"+id+"'");
-   		    while ( rs.next() ) {
-   		    	   result.append("IDX: "+rs.getString(1));
-			       result.append("      ID: "+rs.getString(2));
-			       result.append("      PASSWORD: "+rs.getString(3));
-			       result.append("      이름: "+rs.getString(4)+"\n");
-			}
-		} catch (SQLException e1) {
-			result.append("요청 처리 에러 발생");
+			// #2 SQL문의 구조를 정의 : 변수 영역은 ?로 표시
+			String sql = "select * from board_member where userid = ? ";
+			con = EConnection.getConnection(this);
+			// #3 PrepredStatement 인스턴스를 생성 : con.prepareStatement(쿼리문의구조)
+			st = con.prepareStatement(sql);
+			// #4 쿼리문 구조에서 정의한 변수에 값을 바인딩
+			st.setString(1, id);
+			// #5 쿼리를 실행 : 별도의 인자(sql)를 사용하지 않는다.
+			rs = st.executeQuery();
+		while ( rs.next() ) {
+	    	   result.append("IDX: "+rs.getString(1));
+		       result.append("      ID: "+rs.getString(2));
+		       result.append("      PASSWORD: "+rs.getString(3));
+		       result.append("      이름: "+rs.getString(4)+"\n");
 		}
-	
-			if ( rs != null ) try { rs.close(); }catch(SQLException e){}
-			if ( st != null ) try { st.close(); }catch(SQLException e){}
-			if ( con != null ) try { con.close(); }catch(SQLException e){}
-            
-			return result.toString();
+	} catch (SQLException e1) {
+		result.append("요청 처리 에러 발생");
 	}
+
+		if ( rs != null ) try { rs.close(); }catch(SQLException e){}
+		if ( st != null ) try { st.close(); }catch(SQLException e){}
+		if ( con != null ) try { con.close(); }catch(SQLException e){}
+	 
+		return result.toString();
+	}
+	
 	public String readDB3(String id) throws Exception {
 		StringBuffer  result=new StringBuffer();
 		Connection con=null;
