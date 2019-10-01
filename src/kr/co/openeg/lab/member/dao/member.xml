@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+    
+<sqlMap namespace="member">
+	<typeAlias alias="MemberModel" type="kr.co.openeg.lab.member.model.MemberModel"/>
+	<typeAlias alias="MemberSecurity" type="kr.co.openeg.lab.member.model.MemberSecurity"/>
+	
+	<select id="selectOneMember" parameterClass="int" resultClass="MemberModel">
+		select idx, userId, userPw, userName, pinNo,joinDate
+		from board_member
+		where idx = #idx#
+	</select>
+	
+	<select id="selectAllMember" resultClass="MemberModel">
+		select idx, userId, userPw, userName, pinNo,joinDate
+		from board_member
+	</select>
+	
+	<select id="findByUserId" parameterClass="String" resultClass="MemberModel">
+		select 
+			idx,
+			userId,
+			userPw,
+			userName,
+			pinNo,
+			joinDate
+		from board_member
+		where userId = #userId#
+	</select>
+	
+	<delete id="deleteMember" parameterClass="MemberModel">
+		delete from board_member where userId=#userId#
+	</delete>	
+	
+	<insert id="addMember" parameterClass="MemberModel">
+		insert into board_member(userId, userPw, userName, pinNo,joinDate)
+		values(#userId#, #userPw#, #userName#, #pinNo#,CURDATE())
+	</insert>	
+	<update id="updateMember" parameterClass="MemberModel">
+		update  board_member  set
+		   userPw=#userPw#, 
+		   userName=#userName#,
+		   pinNo=#pinNo#
+		where 
+		   userId=#userId#
+	</update>	
+	
+	
+	<insert id="addMemberSecurity" parameterClass="MemberSecurity">
+		insert into openeg_security(userId, salt,secKey)
+		                 values(#userId#, #salt#,#secKey#)
+	</insert>	
+	
+	<update id="updateMemberSecurity" parameterClass="MemberSecurity">
+		update  openeg_security
+		      set  salt=#salt#,
+		            secKey=#secKey#,
+		      where userId=#userId#
+	</update>	
+	
+	<select id="findMemberSecurityByUserId" parameterClass="String" resultClass="MemberSecurity">
+		select userId,
+	              salt,
+	              secKey
+		from  openeg_security
+		where userId = #userId#
+	</select>	
+</sqlMap>
+
+
+
+
+
+
+

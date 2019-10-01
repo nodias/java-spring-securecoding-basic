@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+       http://www.springframework.org/schema/util
+       http://www.springframework.org/schema/util/spring-util-3.0.xsd
+       http://www.springframework.org/schema/mvc
+       http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
+       http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/aop/spring-aop-3.1.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+	<context:component-scan base-package="kr.co.openeg.lab.board.controller" />
+	<context:component-scan base-package="kr.co.openeg.lab.login.controller" />
+	<context:component-scan base-package="kr.co.openeg.lab.member.controller" />
+	<context:component-scan base-package="kr.co.openeg.lab.test.controller" />
+	<context:component-scan base-package="kr.co.openeg.lab.board.service" />
+	<context:component-scan base-package="kr.co.openeg.lab.login.service" />
+	<context:component-scan base-package="kr.co.openeg.lab.member.service" />
+	<context:component-scan base-package="kr.co.openeg.lab.init" />
+	<context:property-placeholder location="/WEB-INF/*.properties" />
+
+
+	<!-- viewResolver -->
+	<bean id="vewResolver"
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="viewClass"
+			value="org.springframework.web.servlet.view.JstlView" />
+		<property name="prefix" value="/WEB-INF/" />
+		<property name="suffix" value=".jsp" />
+	</bean>
+
+	<!-- validation massage -->
+	<bean id="messageSource"
+		class="org.springframework.context.support.ResourceBundleMessageSource">
+		<property name="basenames">
+			<list>
+				<value>config.validation</value>
+				<value>config.errors</value>
+			</list>
+		</property>
+	</bean>
+
+
+
+	<!-- 멀티파트 -->
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+	</bean>
+
+	<bean
+		class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+		<property name="messageConverters">
+			<list>
+				<bean
+					class="org.springframework.http.converter.StringHttpMessageConverter">
+					<property name="supportedMediaTypes">
+						<list>
+							<value>text/plain;charset=UTF-8</value>
+						</list>
+					</property>
+				</bean>
+			</list>
+		</property>
+	</bean>
+
+
+	<!-- iBatis -->
+	<!-- <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"> -->
+	<!-- <property name="locations" value="classpath:config/conn.properties;classth:config/database.properties" 
+		/> -->
+	<!-- </bean> -->
+
+	<util:properties id="config"
+		location="classpath:config/dbconn.properties" />
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close">
+		<property name="driverClassName" value="#{config['jdbc.driver']}" />
+		<property name="url" value="#{config['jdbc.url']}" />
+		<property name="username" value="#{config['jdbc.username']}" />
+		<property name="password" value="#{config['jdbc.password']}" />
+	</bean>
+
+	<bean id="sqlMapClient" class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="configLocation" value="classpath:/config/sqlMapConfig.xml" />
+	</bean>
+
+	<!-- Dao classes -->
+	<bean id="loginDao" class="kr.co.openeg.lab.login.dao.LoginDaoImpl"
+		p:sqlMapClient-ref="sqlMapClient" />
+
+	<bean id="memberDao" class="kr.co.openeg.lab.member.dao.MemberDaoImpl"
+		p:sqlMapClient-ref="sqlMapClient" />
+
+	<bean id="boardDao" class="kr.co.openeg.lab.board.dao.BoardDaoImpl"
+		p:sqlMapClient-ref="sqlMapClient" />
+
+	<mvc:interceptors>
+		<bean class="kr.co.openeg.lab.common.interceptor.SessionInterceptor" />
+
+
+		<mvc:interceptor>
+			<mvc:mapping path="/board/write.do" />
+			<bean class="kr.co.openeg.lab.common.interceptor.CSRFInterceptor "/>
+		</mvc:interceptor>
+
+
+	</mvc:interceptors>
+
+</beans>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+    
+<sqlMap namespace="login">
+	<typeAlias alias="LoginModel" type="kr.co.openeg.lab.login.model.LoginSessionModel"/>
+	<typeAlias alias="LoginHistory" type="kr.co.openeg.lab.login.model.LoginHistory"/>
+	
+	<select id="loginCheck1" parameterClass="String" resultClass="LoginModel">
+		select 
+			idx,
+			userId,
+			userPw,
+			userName,
+			joinDate
+		from board_member
+		where userId = #userId#
+	</select>	
+	<select id="loginCheck2" parameterClass="LoginModel" resultClass="LoginModel">
+		select 
+			idx,
+			userId,
+			userPw,
+			userName,
+			joinDate
+		from board_member
+		where userId = '$userId$' and userPw = '$userPw$'	
+	</select>	
+	
+	<insert id="addLoginHistory" parameterClass="LoginHistory">
+		insert into login_history(userId,retry,lastFailedLogin,lastSuccessedLogin,clientIP)
+		values(#userId#,#retry#,#lastFailedLogin#,#lastSuccessedLogin#,#clientIP#)
+	</insert>	
+	
+	<update id="updateLoginHistory" parameterClass="LoginHistory">
+		update  login_history  
+		      set  retry=#retry#,
+		            lastFailedLogin=#lastFailedLogin#,
+		            lastSuccessedLogin=#lastSuccessedLogin#,
+		   		    clientIP=#clientIP#
+		 where idx=#idx# and userId=#userId#
+	</update>	
+	
+	<select id="findLoginHistory" parameterClass="String" resultClass="LoginHistory">
+		select 
+		        idx,
+		        userId,
+	            retry,
+	            lastFailedLogin,
+	            lastSuccessedLogin,
+	            clientIP,
+		from login_history
+		where userId = #userId#
+	</select>	
+</sqlMap>
+
+
+
+
+
+
+

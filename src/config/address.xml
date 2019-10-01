@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<addresses>
+   <address name="김영숙" type="admin">
+      <passwd>1234</passwd>
+      <phone>010-1111-2222</phone>
+      <email>hong@openeg.co.kr</email>
+      <ccard>3111-0022-3333-9444</ccard>
+   </address>
+   <address name="홍길동" type="admin">
+      <passwd>1234</passwd>
+      <phone>010-1111-2222</phone>
+      <email>hong@openeg.co.kr</email>
+      <ccard>3333-0022-3333-9444</ccard>
+   </address>
+   <address name="이순신" type="general">
+      <passwd>5678</passwd>
+      <phone>010-3333-2222</phone>
+      <email>lee@openeg.co.kr</email>
+      <ccard>1115-2266-7733-4144</ccard>
+   </address>
+   <address name="강감찬" type="general">
+      <passwd>9876</passwd>
+      <phone>010-7777-2222</phone>
+      <email>kang@openeg.co.kr</email>
+      <ccard>3331-5553-3333-8884</ccard>
+   </address>
+</addresses>

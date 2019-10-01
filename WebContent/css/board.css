@@ -1,0 +1,212 @@
+body {
+	background-color: #cccccc;
+	font-family: sans-serif, tahoma, gulim;
+	font-size: 10pt;
+}
+
+div.listTitle{
+	width: 100%;
+	font-size: 16pt;
+	font-family: tahoma,gulim, sans-serif ;
+	margin-top: 20px;
+}
+
+div.navBar {
+	float: left;
+	width: 100%;
+	margin-top: 20px;
+
+	
+}
+
+div.navBar ul {
+	list-style: none;	
+	margin-bottom: 35px;
+}
+
+div.navBar li {
+	float: left;
+	list-style-position: inside;
+	padding-left: 10px;
+	padding-right: 20px;
+}
+
+div.wrapper {
+	width: 60%;
+	width: 40%;
+	margin: 0 auto;
+	text-align: center;
+}
+
+.td01 {
+	width : 60px;
+	text-align: right;
+}
+
+.wrapper form fieldset {
+	margin: 0 auto;
+	height: 20px;
+	margin-left: 60%;
+	padding: 10px 10px 10px 10px;
+	border-style: inherit;
+}
+
+.wrapper input.writeBt {
+	height: 35px;
+	width: 100px;
+}
+
+.wrapper input.boardSubject{
+	width: 85%;
+	height: 20px;
+	margin-right: 5%;
+}
+
+.boardWrite textarea.boardContent{
+	width: 80%;
+	height: 300px;
+	margin-right: 1%;
+}
+
+
+table.boardTable {
+	width: 100%;
+	border-style: inherit;
+	vertical-align: top;
+}
+
+.boardTable th{
+	height: 35px;
+	background-color: #efffff;
+	padding: 2px 2px 2px 2px;
+}
+.boardTable td{
+	height: 30px;
+	background-color: white;
+	border-bottom-style: outset;
+	padding: 2px 10px 2px 10px;
+}
+
+.boardTable td.idx{
+	width: 7%;
+}
+
+.boardTable td.subject{
+	width: 45%;
+}
+
+.boardTable td.writer{
+	width: 10%;
+}
+
+.boardTable td.comment{
+	width: 7%;
+}
+
+.boardTable td.hitcount{
+	width: 7%;
+}
+
+.boardTable td.recommendcount{
+	width: 7%;
+}
+
+.boardTable td.writeDate{
+	width: 17%;
+}
+
+
+table.boardWrite{
+	width: 100%;
+	border-style: inherit;
+	vertical-align: top;
+	background-color: white;	
+}
+
+table.boardWrite th{
+	width: 15%;
+	height: 35px;
+	background-color: #efffff;
+	padding: 2px 2px 2px 2px;
+}
+
+table.boardWrite td{
+	width: 85%;
+	height: 35px;
+	padding: 2px 2px 2px 2px;
+}
+
+
+
+
+table.boardView {
+	width: 100%;
+	border-style: inherit;
+	vertical-align: top;	
+}
+.boardView th{
+	height: 25px;
+	background-color: #efffff;
+	padding: 5px 5px 5px 5px;
+}
+.boardView td{
+	height: 20px;
+	background-color: white;
+	padding: 5px 10px 5px 10px;
+}
+
+
+table.commentView {
+	width: 100%;
+	border-style: none;
+}
+.commentView th{
+	height: 25px;
+	background-color: #efffff;
+	padding: 5px 5px 5px 5px;
+}
+.commentView td.writer{
+	width: 20%;
+	background-color: white;
+	padding: 2px 2px 2px 2px;
+}
+.commentView td.writer2{
+	width: 10%;
+	background-color: white;
+	padding: 2px 2px 2px 2px;
+}
+.commentView td.content{
+	width: 80%;
+	background-color: white;
+	padding: 2px 2px 2px 2px;
+}
+.commentView td.content2{
+	width: 90%;
+	background-color: white;
+	padding: 2px 2px 2px 2px;
+}
+
+.commentForm1{
+	width: 50%
+	margin-left: 1%;
+	height: 50px;
+}
+.commentBt{
+	margin-left: 2%;
+	width: 10%;
+}
+
+span.date {
+	font-size: 8pt;
+	color: #666666;
+}
+
+A:link    { color: black; text-decoration:none; }
+A:visited { color: black; text-decoration:none; }
+A:active  { color: black; text-decoration:none; }
+A:hover   { color: #666666; text-decoration:none; }
+
+A.page:link    { font-size: 11pt; color: black; text-decoration:none; }
+A.page:visited { font-size: 11pt; color: black; text-decoration:none; }
+A.page:active  { font-size: 11pt; color: black; text-decoration:none; }
+A.page:hover   { font-size: 11pt; color: #666666; text-decoration:none; }
