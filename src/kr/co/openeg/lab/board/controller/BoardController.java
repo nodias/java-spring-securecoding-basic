@@ -1,11 +1,14 @@
 package kr.co.openeg.lab.board.controller;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -185,35 +188,123 @@ public class BoardController {
 		return "/board/write";
 	}
 	
+//	@RequestMapping(value="/write.do", method=RequestMethod.POST)
+//	public String boardWriteProc(@ModelAttribute("BoardModel") BoardModel boardModel, MultipartHttpServletRequest request, HttpSession session){
+//		// get upload file
+//		String uploadPath = session.getServletContext().getRealPath("/")+"files/";
+//		System.out.println("uploadPath: "+uploadPath);
+//		MultipartFile file = request.getFile("file");
+//		if ( file != null && ! "".equals(file.getOriginalFilename())) {
+//			String fileName = file.getOriginalFilename();
+//			File uploadFile = new File(uploadPath+ fileName);
+//			if(uploadFile.exists()){
+//				fileName = new Date().getTime() + fileName;
+//				uploadFile = new File(uploadPath + fileName);
+//			}
+//
+//			try {
+//				file.transferTo(uploadFile);
+//			} catch (Exception e) {
+//				System.out.println("upload error");
+//			}
+//			boardModel.setFileName(fileName);
+//		}
+//
+//		String content =  boardModel.getContent().replaceAll("\r\n", "<br />");		
+//		boardModel.setContent(content);
+//
+//		service.writeArticle(boardModel);		
+//		
+//		return "redirect:list.do";
+//	}
+
 	@RequestMapping(value="/write.do", method=RequestMethod.POST)
-	public String boardWriteProc(@ModelAttribute("BoardModel") BoardModel boardModel, MultipartHttpServletRequest request, HttpSession session){
+	public String boardWriteProc(@ModelAttribute("BoardModel") BoardModel boardModel, MultipartHttpServletRequest request, 
+			HttpSession session, ServletResponse response) throws IOException{
 		// get upload file
 		String uploadPath = session.getServletContext().getRealPath("/")+"files/";
+//view.jsp 파일 다운로드 소스 경로 수정 필요 <a href="../WEB-INF/${board.fileName} 
+/*		
+		String uploadPath = session.getServletContext().getRealPath("/")+"WEB-INF/";
+*/		
 		System.out.println("uploadPath: "+uploadPath);
 		MultipartFile file = request.getFile("file");
 		if ( file != null && ! "".equals(file.getOriginalFilename())) {
 			String fileName = file.getOriginalFilename();
-			File uploadFile = new File(uploadPath+ fileName);
-			if(uploadFile.exists()){
-				fileName = new Date().getTime() + fileName;
-				uploadFile = new File(uploadPath + fileName);
-			}
-
-			try {
-				file.transferTo(uploadFile);
-			} catch (Exception e) {
-				System.out.println("upload error");
-			}
-			boardModel.setFileName(fileName);
-		}
-
-		String content =  boardModel.getContent().replaceAll("\r\n", "<br />");		
-		boardModel.setContent(content);
-
-		service.writeArticle(boardModel);		
-		
-		return "redirect:list.do";
+			
+			//1. 화이트 리스트 방식 파일 확장자 검증
+		  if (fileName != null) {
+					    String fileExt = fileName.substring(fileName.lastIndexOf(".")+1).toLowerCase();
+					    if (!"gif".equals(fileExt) && !"jpg".equals(fileExt) && !"png".equals(fileExt)) {
+					    	
+					    	response.setContentType("text/html; charset=UTF-8");
+					    	PrintWriter out = response.getWriter();
+					    	out.println("<script>alert('업로드 가능한 확장자가 아닙니다!~');history.go(-1);</script>");
+					    	out.flush();
+					    	return null;
+					        }
 	}
+			
+			//2. 파일 크기 검사 
+/*	 if (file.getSize() > 1024) {//1M 이하 파일만
+				    	response.setContentType("text/html; charset=UTF-8");
+				    	PrintWriter out = response.getWriter();
+				    	out.println("<script>alert('업로드 파일 용량 제한!~');history.go(-1);</script>");
+				    	out.flush();
+				    	return null;
+	}	*/
+			
+			//3. 파일명 추상화
+			//view.jsp 파일 다운로드 소스 경로 수정 필요 <a href="../files/${board.savedFileName} 
+			String savedFileName = UUID.randomUUID().toString();	
+			 		File uploadFile = new File(uploadPath+ savedFileName);
+			 //예전에는 업로드한 파일명을 저장에 그대로 사용했기 때문에 파일명이 충돌될 수 있었으나, 
+			 //변경된 코드에서는 항상 다른 파일명이 생성되므로 아래 코드는 불필요 
+						//if(uploadFile.exists()){
+						//	fileName = new Date().getTime() + fileName;
+						//	uploadFile = new File(uploadPath + fileName);
+						//	}
+						 try {
+							file.transferTo(uploadFile);
+						} catch (Exception e) {
+							System.out.println("upload error");	} 
+						 //저장된 파일 참조를 위해 저장에 사용한 파일명을 모델에 넣는다.
+						    boardModel.setSavedFileName(savedFileName); // 저장에 사용한 파일명
+							boardModel.setFileName(fileName); // 업로드한 파일의 원본 파일명
+			boardModel.setFileName(fileName);
+					}
+
+					String content =  boardModel.getContent().replaceAll("\r\n", "<br />");		
+					boardModel.setContent(content);
+
+					service.writeArticle(boardModel);		
+					
+					return "redirect:list.do";
+				
+	}
+			
+//			File uploadFile = new File(uploadPath+ fileName);
+//			if(uploadFile.exists()){
+//				fileName = new Date().getTime() + fileName;
+//				uploadFile = new File(uploadPath + fileName);
+//			}
+//
+//			try {
+//				file.transferTo(uploadFile);
+//			} catch (Exception e) {
+//				System.out.println("upload error");
+//			}
+//			boardModel.setFileName(fileName);
+//		}
+//
+//		String content =  boardModel.getContent().replaceAll("\r\n", "<br />");		
+//		boardModel.setContent(content);
+//
+//		service.writeArticle(boardModel);		
+		
+//		return "redirect:list.do";
+//	}
+//	
 	
 	@RequestMapping("/commentWrite.do")
 	public ModelAndView commentWriteProc(@ModelAttribute("CommentModel") BoardCommentModel commentModel){
